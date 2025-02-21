@@ -1,7 +1,8 @@
 #include "main.h"
 
 /**
- * _islower
+ * _islower - function
+ * @c: letter
  *
  * Return: int
  */
