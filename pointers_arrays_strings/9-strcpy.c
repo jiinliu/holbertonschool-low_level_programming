@@ -13,8 +13,6 @@ char *_strcpy(char *dest, char *src)
 	char *ptr = dest;
 
 
-	if (dest == NULL || src == NULL)
-		return (NULL);
 	while (*src)
 	{
 		*dest = *src;
