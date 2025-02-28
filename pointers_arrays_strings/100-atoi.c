@@ -9,23 +9,30 @@
 int _atoi(char *s)
 {
 	int sign = 1;
-	int result = 0;
+	unsigned int result = 0;
 	int found_number = 0;
 
-		while (*s)
+	while (*s)
+	{
+		if (*s == '-')
+			sign *= -1;
+		else if (*s >= '0' && *s <= '9')
 		{
-			if (*s == '-')
-				sign *= -1;
-			else if (*s >= '0' && *s <= '9')
+			found_number = 1;
+
+			/* Prevent overflow: Check against 2147483647 and -2147483648 */
+			if (result > 214748364 || (result == 214748364 && (*s - '0') > 7))
 			{
-				found_number = 1;
-				result = result * 10 + (*s - '0');
+				return (sign == 1 ? 2147483647 : -2147483648);
 			}
-			else if (found_number)
-				break;
 
-			s++;
+			result = result * 10 + (*s - '0');
 		}
+		else if (found_number)
+			break;
 
-		return (sign * result);
+		s++;
+	}
+
+	return (sign * result);
 }
