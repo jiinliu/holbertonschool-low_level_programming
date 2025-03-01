@@ -12,7 +12,7 @@ char *cap_string(char *str)
 
 	while (str[i] != '\0')
 	{
-		if (i == 0 || str[i - 1] == ' ' || str[i - 1] == '\t' || 
+		if (i == 0 || str[i - 1] == ' ' || str[i - 1] == '\t' ||
 		    str[i - 1] == '\n' || str[i - 1] == ',' || str[i - 1] == ';' ||
 		    str[i - 1] == '.' || str[i - 1] == '!' || str[i - 1] == '?' ||
 		    str[i - 1] == '"' || str[i - 1] == '(' || str[i - 1] == ')' ||
