@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 /**
- * alloc_grid - function
+ * alloc_grid - funvtion
  * @width: width
  * @height: height
  *
@@ -9,7 +9,8 @@
  */
 int **alloc_grid(int width, int height)
 {
-	int **grid, i;
+	int **grid;
+	int i, j;
 
 	if (width <= 0 || height <= 0)
 		return (NULL);
@@ -20,14 +21,16 @@ int **alloc_grid(int width, int height)
 
 	for (i = 0; i < height; i++)
 	{
-		grid[i] = calloc(width, sizeof(int));
+		grid[i] = malloc(width * sizeof(int));
 		if (!grid[i])
 		{
-			while (i--)
+			while (i-- > 0)
 				free(grid[i]);
 			free(grid);
 			return (NULL);
 		}
+		for (j = 0; j < width; j++)
+			grid[i][j] = 0;
 	}
 
 	return (grid);
