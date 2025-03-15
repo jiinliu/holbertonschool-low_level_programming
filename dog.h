@@ -14,7 +14,6 @@ struct dog
     char *owner;
 };
 
-/* Define dog_t as a new name for struct dog */
 typedef struct dog dog_t;
 
 #endif
