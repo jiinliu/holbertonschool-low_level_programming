@@ -1,7 +1,8 @@
 #include "3-calc.h"
+#include <string.h>
 
 /**
- * main - function
+ * main - performs simple operations
  * @argc: number of arguments
  * @argv: array of arguments
  *
@@ -21,6 +22,14 @@ int main(int argc, char *argv[])
 	num1 = atoi(argv[1]);
 	num2 = atoi(argv[3]);
 
+	if (strlen(argv[2]) != 1 ||
+		(*argv[2] != '+' && *argv[2] != '-' && *argv[2] != '*' &&
+		*argv[2] != '/' && *argv[2] != '%'))
+	{
+		printf("Error\n");
+		exit(99);
+	}
+
 	operation = get_op_func(argv[2]);
 	if (operation == NULL)
 	{
@@ -35,14 +44,6 @@ int main(int argc, char *argv[])
 	}
 
 	printf("%d\n", operation(num1, num2));
-
-	if (strlen(argv[2]) != 1 ||
-			(*argv[2] != '+' && *argv[2] != '-' && *argv[2] != '*' &&
-			 *argv[2] != '/' && *argv[2] != '%'))
-	{
-		printf("Error\n");
-		exit(99);
-	}
 
 	return (0);
 }
