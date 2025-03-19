@@ -2,6 +2,21 @@
 #include <string.h>
 
 /**
+ * is_valid_operator - checks if the operator is valid
+ * @op: the operator to check
+ *
+ * Return: 1 if valid, 0 if not
+ */
+int is_valid_operator(char *op)
+{
+	if (strlen(op) != 1)
+		return (0);
+	if (*op != '+' && *op != '-' && *op != '*' && *op != '/' && *op != '%')
+		return (0);
+	return (1);
+}
+
+/**
  * main - performs simple operations
  * @argc: number of arguments
  * @argv: array of arguments
@@ -22,9 +37,7 @@ int main(int argc, char *argv[])
 	num1 = atoi(argv[1]);
 	num2 = atoi(argv[3]);
 
-	if (strlen(argv[2]) != 1 ||
-		(*argv[2] != '+' && *argv[2] != '-' && *argv[2] != '*' &&
-		*argv[2] != '/' && *argv[2] != '%'))
+	if (!is_valid_operator(argv[2]))
 	{
 		printf("Error\n");
 		exit(99);
@@ -47,3 +60,4 @@ int main(int argc, char *argv[])
 
 	return (0);
 }
+
