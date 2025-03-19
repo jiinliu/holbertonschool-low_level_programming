@@ -36,5 +36,13 @@ int main(int argc, char *argv[])
 
 	printf("%d\n", operation(num1, num2));
 
+	if (strlen(argv[2]) != 1 ||
+			(*argv[2] != '+' && *argv[2] != '-' && *argv[2] != '*' &&
+			 *argv[2] != '/' && *argv[2] != '%'))
+	{
+		printf("Error\n");
+		exit(99);
+	}
+
 	return (0);
 }
