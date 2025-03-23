@@ -20,7 +20,7 @@ int (*get_op_func(char *s))(int, int)
 
 	while (ops[i].op != NULL)
 	{
-		if (*s == *(ops[i].op))
+		if (strcmp(s, ops[i].op) == 0)	
 			return (ops[i].f);
 		i++;
 	}
