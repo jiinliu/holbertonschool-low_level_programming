@@ -3,7 +3,7 @@
 #include <string.h>
 
 /**
- * list_len - function
+ * list_len - Counts elements in a linked list
  * @h: Pointer to head
  *
  * Return: Number of elements
@@ -21,7 +21,7 @@ size_t list_len(const list_t *h)
 }
 
 /**
- * add_node - function
+ * add_node - Adds a new node at the beginning
  * @head: Pointer to head
  * @str: String to duplicate
  *
