@@ -1,6 +1,20 @@
-#include "lists.h"
 #include <stdlib.h>
-#include <string.h>
+
+/**
+ * my_strlen - Custom function to calculate string length
+ * @str: String to calculate the length of
+ *
+ * Return: Length of the string
+ */
+size_t my_strlen(const char *str)
+{
+	size_t len = 0;
+
+	while (str[len] != '\0')
+		len++;
+
+	return (len);
+}
 
 /**
  * list_len - Counts elements in a linked list
@@ -17,6 +31,7 @@ size_t list_len(const list_t *h)
 		count++;
 		h = h->next;
 	}
+
 	return (count);
 }
 
@@ -45,7 +60,7 @@ list_t *add_node(list_t **head, const char *str)
 		return (NULL);
 	}
 
-	new->len = strlen(new->str);
+	new->len = my_strlen(new->str);
 	new->next = *head;
 	*head = new;
 
