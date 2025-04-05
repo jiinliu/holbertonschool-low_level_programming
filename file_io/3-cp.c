@@ -6,7 +6,7 @@
 #include <sys/types.h>
 
 /**
- * error_handler - handles errors with messages and exit codes
+ * error_handler - handles errors with appropriate messages and exit codes
  * @code: exit code
  * @msg: error message format string
  * @arg: argument for the format string
@@ -27,7 +27,7 @@ void error_handler(int code, char *msg, char *arg, int fd1, int fd2)
 /**
  * close_check - checks if closing a file descriptor returns an error
  * @fd: file descriptor to close
- * @fd2: second file descriptor to close if error (-1 if none)
+ * @fd2: second file descriptor to close if there's an error (-1 if none)
  * Return: void
  */
 void close_check(int fd, int fd2)
@@ -44,46 +44,6 @@ void close_check(int fd, int fd2)
 }
 
 /**
- * copy_content - handles the actual file copying
- * @file_from: source file descriptor
- * @file_to: destination file descriptor
- * @from_name: source filename
- * @to_name: destination filename
- * Return: void
- */
-void copy_content(int file_from, int file_to, char *from_name, char *to_name)
-{
-	ssize_t nchars, nwr;
-	char buf[1024];
-
-	/* First read test */
-	nchars = read(file_from, buf, 1024);
-	if (nchars == -1)
-		error_handler(98, "Error: Can't read from file %s\n", from_name,
-			file_from, -1);
-
-	/* Write first buffer */
-	nwr = write(file_to, buf, nchars);
-	if (nwr == -1 || nwr != nchars)
-		error_handler(99, "Error: Can't write to %s\n", to_name,
-			file_from, file_to);
-
-	/* Continue reading and writing */
-	while ((nchars = read(file_from, buf, 1024)) > 0)
-	{
-		nwr = write(file_to, buf, nchars);
-		if (nwr == -1 || nwr != nchars)
-			error_handler(99, "Error: Can't write to %s\n", to_name,
-				file_from, file_to);
-	}
-
-	/* Check if subsequent read failed */
-	if (nchars == -1)
-		error_handler(98, "Error: Can't read from file %s\n", from_name,
-			file_from, file_to);
-}
-
-/**
  * main - copies the content of a file to another file
  * @argc: number of arguments
  * @argv: arguments vector
@@ -92,6 +52,8 @@ void copy_content(int file_from, int file_to, char *from_name, char *to_name)
 int main(int argc, char *argv[])
 {
 	int file_from, file_to;
+	ssize_t nchars, nwr;
+	char buf[1024];
 
 	if (argc != 3)
 		error_handler(97, "Usage: cp file_from file_to\n", NULL, -1, -1);
@@ -100,11 +62,30 @@ int main(int argc, char *argv[])
 	if (file_from == -1)
 		error_handler(98, "Error: Can't read from file %s\n", argv[1], -1, -1);
 
+	nchars = read(file_from, buf, 1024);
+	if (nchars == -1)
+		error_handler(98, "Error: Can't read from file %s\n", argv[1],
+				file_from, -1);
+
 	file_to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	if (file_to == -1)
 		error_handler(99, "Error: Can't write to %s\n", argv[2], file_from, -1);
 
-	copy_content(file_from, file_to, argv[1], argv[2]);
+	nwr = write(file_to, buf, nchars);
+	if (nwr == -1 || nwr != nchars)
+		error_handler(99, "Error: Can't write to %s\n", argv[2], file_from, file_to);
+
+	while ((nchars = read(file_from, buf, 1024)) > 0)
+	{
+		nwr = write(file_to, buf, nchars);
+		if (nwr == -1 || nwr != nchars)
+			error_handler(99, "Error: Can't write to %s\n", argv[2],
+					file_from, file_to);
+	}
+
+	if (nchars == -1)
+		error_handler(98, "Error: Can't read from file %s\n", argv[1],
+				file_from, file_to);
 
 	close_check(file_from, file_to);
 	close_check(file_to, -1);
