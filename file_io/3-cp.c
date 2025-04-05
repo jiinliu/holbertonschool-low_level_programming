@@ -9,7 +9,7 @@
  * print_error_and_exit - prints an error message and exits
  * @code: exit status code
  * @format: format string for dprintf
- * @arg: filename or descriptor value
+ * @arg: filename or fd value
  */
 void print_error_and_exit(int code, const char *format, const char *arg)
 {
@@ -22,7 +22,7 @@ void print_error_and_exit(int code, const char *format, const char *arg)
  * @argc: argument count
  * @argv: argument vector
  *
- * Return: 0 on success, exits with codes 97-100 on error
+ * Return: 0 on success, or exits with specific code on error
  */
 int main(int argc, char *argv[])
 {
@@ -46,18 +46,8 @@ int main(int argc, char *argv[])
 		print_error_and_exit(99, "Error: Can't write to %s\n", argv[2]);
 	}
 
-	while (1)
+	while ((r = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 	{
-		r = read(fd_from, buffer, BUFFER_SIZE);
-		if (r == -1)
-		{
-			close(fd_from);
-			close(fd_to);
-			print_error_and_exit(98, "Error: Can't read from file %s\n", argv[1]);
-		}
-		if (r == 0)
-			break;
-
 		w = write(fd_to, buffer, r);
 		if (w == -1 || w != r)
 		{
@@ -65,6 +55,13 @@ int main(int argc, char *argv[])
 			close(fd_to);
 			print_error_and_exit(99, "Error: Can't write to %s\n", argv[2]);
 		}
+	}
+
+	if (r == -1)
+	{
+		close(fd_from);
+		close(fd_to);
+		print_error_and_exit(98, "Error: Can't read from file %s\n", argv[1]);
 	}
 
 	if (close(fd_from) == -1)
