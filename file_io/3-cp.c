@@ -17,9 +17,34 @@ void error_exit(int code, char *message, char *filename, int fd)
 {
 	if (fd >= 0)
 		close(fd);
-	
 	dprintf(STDERR_FILENO, message, filename);
 	exit(code);
+}
+
+/**
+ * close_files - closes file descriptors and handles errors
+ * @fd_from: file descriptor of source file
+ * @fd_to: file descriptor of destination file
+ * Return: void
+ */
+void close_files(int fd_from, int fd_to)
+{
+	int err_close;
+
+	err_close = close(fd_from);
+	if (err_close == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_from);
+		close(fd_to);
+		exit(100);
+	}
+
+	err_close = close(fd_to);
+	if (err_close == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_to);
+		exit(100);
+	}
 }
 
 /**
@@ -30,7 +55,7 @@ void error_exit(int code, char *message, char *filename, int fd)
  */
 int main(int argc, char *argv[])
 {
-	int file_from, file_to, err_close;
+	int file_from, file_to;
 	ssize_t nchars, nwr;
 	char buf[1024];
 
@@ -56,30 +81,15 @@ int main(int argc, char *argv[])
 	{
 		nwr = write(file_to, buf, nchars);
 		if (nwr == -1 || nwr != nchars)
-			error_exit(99, "Error: Can't write to %s\n", argv[2],
-				   file_from);
+			error_exit(99, "Error: Can't write to %s\n", argv[2], file_from);
 	}
 
 	/* Check if read failed */
 	if (nchars == -1)
-		error_exit(98, "Error: Can't read from file %s\n", argv[1],
-			   file_from);
+		error_exit(98, "Error: Can't read from file %s\n", argv[1], file_from);
 
-	/* Close files and check for errors */
-	err_close = close(file_from);
-	if (err_close == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_from);
-		close(file_to);
-		exit(100);
-	}
-
-	err_close = close(file_to);
-	if (err_close == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_to);
-		exit(100);
-	}
+	/* Close files */
+	close_files(file_from, file_to);
 
 	return (0);
 }
