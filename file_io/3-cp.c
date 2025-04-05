@@ -6,10 +6,10 @@
 #define BUFFER_SIZE 1024
 
 /**
- * print_error_and_exit - prints error message and exits with code
- * @code: exit code
+ * print_error_and_exit - prints an error message and exits
+ * @code: exit status code
  * @format: format string for dprintf
- * @arg: argument to print in the format string
+ * @arg: filename or descriptor value
  */
 void print_error_and_exit(int code, const char *format, const char *arg)
 {
@@ -18,11 +18,11 @@ void print_error_and_exit(int code, const char *format, const char *arg)
 }
 
 /**
- * main - copies the content of one file to another
+ * main - copies content from one file to another
  * @argc: argument count
  * @argv: argument vector
  *
- * Return: 0 on success, or exit with appropriate error code
+ * Return: 0 on success, exits with codes 97-100 on error
  */
 int main(int argc, char *argv[])
 {
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	while ((r = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 	{
 		w = write(fd_to, buffer, r);
-		if (w != r)
+		if (w == -1 || w != r)
 		{
 			close(fd_from);
 			close(fd_to);
