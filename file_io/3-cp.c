@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
 	/* First read test before opening destination */
 	nchars = read(file_from, buf, 1024);
 	if (nchars == -1)
-		error_handler(98, "Error: Can't read from file %s\n", argv[1], file_from, -1);
+		error_handler(98, "Error: Can't read from file %s\n",
+			       	argv[1], file_from, -1);
 
 	file_to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	if (file_to == -1)
@@ -81,12 +82,14 @@ int main(int argc, char *argv[])
 	{
 		nwr = write(file_to, buf, nchars);
 		if (nwr == -1 || nwr != nchars)
-			error_handler(99, "Error: Can't write to %s\n", argv[2], file_from, file_to);
+			error_handler(99, "Error: Can't write to %s\n", 
+					argv[2], file_from, file_to);
 	}
 
 	/* Check if subsequent read failed */
 	if (nchars == -1)
-		error_handler(98, "Error: Can't read from file %s\n", argv[1], file_from, file_to);
+		error_handler(98, "Error: Can't read from file %s\n",
+			       	argv[1], file_from, file_to);
 
 	close_check(file_from, file_to);
 	close_check(file_to, -1);
