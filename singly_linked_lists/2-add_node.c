@@ -1,68 +1,35 @@
 #include <stdlib.h>
+#include <string.h>
+#include "lists.h"
 
 /**
- * my_strlen - Custom function to calculate string length
- * @str: String to calculate the length of
+ * add_node - Adds a new node at the beginning of a list_t list
+ * @head: Double pointer to the head of the list
+ * @str: String to be duplicated and stored in the new node
  *
- * Return: Length of the string
- */
-size_t my_strlen(const char *str)
-{
-	size_t len = 0;
-
-	while (str[len] != '\0')
-		len++;
-
-	return (len);
-}
-
-/**
- * list_len - Counts elements in a linked list
- * @h: Pointer to head
- *
- * Return: Number of elements
- */
-size_t list_len(const list_t *h)
-{
-	size_t count = 0;
-
-	while (h)
-	{
-		count++;
-		h = h->next;
-	}
-
-	return (count);
-}
-
-/**
- * add_node - Adds a new node at the beginning
- * @head: Pointer to head
- * @str: String to duplicate
- *
- * Return: Address of new node or NULL
+ * Return: Address of the new element, or NULL if it failed
  */
 list_t *add_node(list_t **head, const char *str)
 {
-	list_t *new;
+	list_t *new_node;
+	char *dup_str;
 
-	if (!str)
+	if (str == NULL)
 		return (NULL);
 
-	new = malloc(sizeof(list_t));
-	if (!new)
+	dup_str = strdup(str);
+	if (dup_str == NULL)
 		return (NULL);
 
-	new->str = strdup(str);
-	if (!new->str)
+	new_node = malloc(sizeof(list_t));
+	if (new_node == NULL)
 	{
-		free(new);
+		free(dup_str);
 		return (NULL);
 	}
 
-	new->len = my_strlen(new->str);
-	new->next = *head;
-	*head = new;
+	new_node->str = dup_str;
+	new_node->len = strlen(dup_str);
+	new_node->next = *head;
+	*head = new_node;
 
-	return (new);
-}
